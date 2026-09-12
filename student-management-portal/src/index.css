@@ -1,0 +1,73 @@
+:root {
+  --paper: #f5f1e8;
+  --ink: #202321;
+  --muted: #77766f;
+  --coral: #e4694e;
+  --line: #d9d3c8;
+  --heading: Georgia, "Times New Roman", serif;
+  --mono: "Courier New", monospace;
+  font-family: "Trebuchet MS", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: #f5f1e8;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before,
+body::after {
+  position: fixed;
+  top: -80px;
+  display: block;
+  width: 100vw;
+  z-index: 0;
+  pointer-events: none;
+  white-space: pre;
+  font-size: 26px;
+  line-height: 3.2;
+  letter-spacing: 0;
+  opacity: 0.35;
+  filter: drop-shadow(3px 7px 2px rgba(32, 35, 33, 0.12));
+  animation: leaves-fall 14s linear infinite;
+}
+body::before {
+  content: "🍁                         🍁       🍁                         🍁\A       🍁              🍁                   🍁              🍁\A  🍁                      🍁                         🍁\A             🍁                         🍁             🍁";
+  left: 0;
+}
+body::after {
+  content: "        🍁             🍁                     🍁             🍁\A🍁                    🍁          🍁                         🍁\A                 🍁                      🍁          🍁\A    🍁                           🍁                    🍁";
+  left: 0;
+  animation-delay: -6s;
+  animation-duration: 18s;
+}
+@keyframes leaves-fall {
+  from {
+    transform: translate3d(-30px, -100px, 0);
+  }
+  45% {
+    transform: translate3d(40px, 48vh, 0);
+  }
+  to {
+    transform: translate3d(-15px, 110vh, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+    transform: translateY(14vh);
+  }
+}
+button,
+input {
+  font: inherit;
+}
