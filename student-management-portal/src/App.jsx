@@ -14,7 +14,7 @@ function NotFound() {
   return (
     <div className="state-message">
       <h1>Page not found</h1>
-      <Link to="/">Return home</Link>
+      <Link to="/">Return</Link>
     </div>
   );
 }
