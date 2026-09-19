@@ -28,20 +28,6 @@ export default function Home({ students = [], loading }) {
           Explore students <span>→</span>
         </Link>
       </section>
-      <section className="home-panel">
-        <div className="panel-label">Directory snapshot</div>
-        <div className="big-number">{loading ? "—" : students.length}</div>
-        <p>Students in your active directory</p>
-        <div className="mini-rule" />
-        <div className="home-links">
-          <Link to="/students">
-            View directory <span>↗</span>
-          </Link>
-          <Link to="/add-student">
-            Add a student <span>↗</span>
-          </Link>
-        </div>
-      </section>
       <section className="stats">
         <StatCard
           label="Active students"

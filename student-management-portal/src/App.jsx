@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { HashRouter, Link, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -8,7 +7,8 @@ import AddStudent from "./components/AddStudent";
 import StudentDetail from "./components/StudentDetail";
 import "./App.css";
 
-const API_URL = "https://jsonplaceholder.typicode.com/users";
+
+const ADDED_STUDENTS_KEY = "student-portal-added-students";
 
 function NotFound() {
   return (
@@ -20,30 +20,29 @@ function NotFound() {
 }
 
 function App() {
-  const [students, setStudents] = useState([]);
-  const [addedStudents, setAddedStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [hasAddedStudent, setHasAddedStudent] = useState(false);
-
+  const [addedStudents, setAddedStudents] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(ADDED_STUDENTS_KEY)) || [];
+    } catch {
+      return [];
+    }
+  });
   useEffect(() => {
-    axios
-      .get(API_URL)
-      .then((response) => setStudents(response.data))
-      .catch(() =>
-        setError("We could not load the student directory. Please try again."),
-      )
-      .finally(() => setLoading(false));
-  }, []);
+    localStorage.setItem(ADDED_STUDENTS_KEY, JSON.stringify(addedStudents));
+  }, [addedStudents]);
 
   const addStudent = (student) => {
-    setAddedStudents((current) => [...current, student]);
-    setHasAddedStudent(true);
+    setAddedStudents((current) => [
+      ...current,
+      { ...student, isAdded: true },
+    ]);
   };
 
   const updateStudent = (student) => {
     setAddedStudents((current) =>
-      current.map((item) => (item.id === student.id ? student : item)),
+      current.map((item) =>
+        item.id === student.id ? { ...student, isAdded: true } : item,
+      ),
     );
   };
 
@@ -55,23 +54,31 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={<Home students={students} loading={loading} />}
+              element={
+                <Home
+                  students={addedStudents}
+                  loading={false}
+                />
+              }
             />
             <Route
               path="/students"
               element={
                 <Students
                   students={addedStudents}
-                  loading={loading}
-                  error={error}
-                  canView={hasAddedStudent}
+                  loading={false}
+                  error=""
+                  canView
                 />
               }
             />
             <Route
               path="/students/:id"
               element={
-                <StudentDetail students={addedStudents} loading={loading} />
+                <StudentDetail
+                  students={addedStudents}
+                  loading={false}
+                />
               }
             />
             <Route
@@ -79,7 +86,7 @@ function App() {
               element={
                 <AddStudent
                   onAdd={addStudent}
-                  hasAddedStudent={hasAddedStudent}
+                  hasAddedStudent={addedStudents.length > 0}
                 />
               }
             />
@@ -89,7 +96,7 @@ function App() {
                 <AddStudent
                   students={addedStudents}
                   onUpdate={updateStudent}
-                  hasAddedStudent={hasAddedStudent}
+                  hasAddedStudent={addedStudents.length > 0}
                 />
               }
             />

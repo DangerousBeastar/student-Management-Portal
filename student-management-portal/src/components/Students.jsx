@@ -2,16 +2,20 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function StudentCard({ student }) {
+  const initials = student.name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2);
+
   return (
     <div className="student-card">
       <Link className="student-card-main" to={`/students/${student.id}`}>
-        <div className="avatar">
-          {student.name
-            .split(" ")
-            .map((part) => part[0])
-            .join("")
-            .slice(0, 2)}
-        </div>
+        {student.image ? (
+          <img className="avatar avatar-image" src={student.image} alt="" />
+        ) : (
+          <div className="avatar">{initials}</div>
+        )}
         <div className="student-card-copy">
           <span className="student-id">
             ID / {String(student.id).padStart(3, "0")}
@@ -24,9 +28,11 @@ function StudentCard({ student }) {
         </div>
         <span className="card-arrow">↗</span>
       </Link>
-      <Link className="edit-button" to={`/students/${student.id}/edit`}>
-        Edit
-      </Link>
+      {student.isAdded && (
+        <Link className="edit-button" to={`/students/${student.id}/edit`}>
+          Edit
+        </Link>
+      )}
     </div>
   );
 }
@@ -71,11 +77,17 @@ export default function Students({ students, loading, error, canView }) {
           <h1>Students</h1>
           <p>Search the people who make this campus work.</p>
         </div>
-        {canView && (
-          <Link className="button button-dark" to="/add-student">
-            + Add student
+        <div className="directory-heading-actions">
+          <Link className="directory-snapshot" to="/students">
+            <span>Directory snapshot</span>
+            <strong>{students.length}</strong>
           </Link>
-        )}
+          {canView && (
+            <Link className="button button-dark" to="/add-student">
+              + Add student
+            </Link>
+          )}
+        </div>
       </div>
       {!canView && (
         <div className="empty-directory">

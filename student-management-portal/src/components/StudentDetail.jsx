@@ -36,7 +36,15 @@ export default function StudentDetail({ students = [], loading }) {
         ← Back to directory
       </Link>
       <div className="details-layout">
-        <div className="detail-portrait">{initials}</div>
+        {student.image ? (
+          <img
+            className="detail-portrait portrait-image"
+            src={student.image}
+            alt=""
+          />
+        ) : (
+          <div className="detail-portrait">{initials}</div>
+        )}
         <div>
           <p className="eyebrow">
             Student profile / {String(student.id).padStart(3, "0")}

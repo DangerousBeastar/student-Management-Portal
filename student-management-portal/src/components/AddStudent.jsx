@@ -29,6 +29,7 @@ export default function AddStudent({
     phone: studentToEdit?.phone || "",
     program: studentToEdit?.company?.name || "",
     yearLevel: studentToEdit?.yearLevel || "",
+    image: studentToEdit?.image || "",
   });
   const handleChange = (event) =>
     setForm((current) => ({
@@ -42,13 +43,14 @@ export default function AddStudent({
     const email = form.email.trim();
     if (!studentId || !name || !email) return;
     const updatedStudent = {
-      id: studentId,
+      id: studentToEdit?.id || studentId,
       studentId,
       name,
       email,
       phone: form.phone.trim(),
       company: { name: form.program.trim() || "New student" },
       yearLevel: form.yearLevel,
+      image: form.image,
       address: { city: "Campus" },
     };
     if (isEditing) {
@@ -126,6 +128,25 @@ export default function AddStudent({
             <option value="4th Year">4th Year</option>
             <option value="Graduate">Graduate</option>
           </select>
+        </label>
+        <label className="form-field">
+          <span>Profile picture</span>
+          <input
+            name="image"
+            type="file"
+            accept="image/*"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = () =>
+                setForm((current) => ({ ...current, image: reader.result }));
+              reader.readAsDataURL(file);
+            }}
+          />
+          {form.image && (
+            <img className="image-preview" src={form.image} alt="Preview" />
+          )}
         </label>
         <button className="button button-dark" type="submit">
           {isEditing ? "Save changes" : "Create student record"} <span>→</span>
